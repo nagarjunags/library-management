@@ -1,0 +1,15 @@
+{
+  "name": "library",
+  "version": "1.0.0",
+  "description": "deals with the library operations implemnetation",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest"
+  },
+  "author": "Veersh , Nagaraj, Vedanth",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "vitest": "^1.6.0"
+  }
+}
