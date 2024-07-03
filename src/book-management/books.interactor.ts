@@ -2,16 +2,20 @@ import { readChar,readLine } from "../../core/input.utils";
 import { IInteractor } from "../../core/interactor";
 import { IBookBase } from "./models/books.model";
 import { BookRepository } from "./books.repository";
-    const menu = `
-    1. Add Book
-    2. dit Book
-    3.Search book
-    4.<Pervious Menu>`;
+import { Menu } from "../../core/menu";
+    const menu = new Menu(" Book Management ",[
+    {key:"1",label:" Add Book"},
+    {key:"2",label:" Edit Book"},
+    {key:"3",label:"Search book"},
+    {key:"4",label:"<Pervious Menu>"},]);
 export class BookInteractor implements IInteractor {
     private repo = new BookRepository();
-    async showMenu(): Promise<void>{
-        const op = await readChar(menu);
-        switch (op.toLowerCase()) {
+  async showMenu(): Promise<void> {
+    let loop = true;
+    while (loop) {
+      const op = await menu.show();
+      if (op) {
+        switch (op?.key.toLowerCase()) {
           case "1":
             // TODO add book flow
             await addBook(this.repo);
@@ -21,12 +25,20 @@ export class BookInteractor implements IInteractor {
             break;
           case "3":
             // TODO add book flow
+            console.table(this.repo.list({ limit: 1000, offset: 0 }).items);
             break;
           case "4":
+            loop = false;
             // TODO add book flow
             break;
         }
-    }
+      }
+      else {
+          console.log("\n Invalid input \n\n");
+        }
+      }
+    
+  }
 }
 
 
