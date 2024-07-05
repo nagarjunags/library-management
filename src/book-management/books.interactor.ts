@@ -39,12 +39,15 @@ export class BookInteractor implements IInteractor {
         }
       } else {
         console.log("\nInvalid input\n\n");
+
       }
     }
   }
 }
 
 async function getBookInput(): Promise<IBookBase> {
+
+
   const title = await readLine(`Please enter title:`);
   const author = await readLine(`Please enter author:`);
   const publisher = await readLine(`Please enter publisher:`);
@@ -73,6 +76,7 @@ async function addBook(repo: BookRepository) {
   console.table(createBook);
 }
 
+
 async function updateBook(repo: BookRepository) {
   const id = +(await readLine("Please enter the ID of the book to update:"));
   const book = repo.getById(id)!;
@@ -99,3 +103,4 @@ async function updateBook(repo: BookRepository) {
     book.totalNumberOfCopies
   ));
 }
+
