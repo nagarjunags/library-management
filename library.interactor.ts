@@ -2,6 +2,7 @@ import { errorTheme } from "../Library-Management/core/themes";
 import { IInteractor } from "./core/interactor";
 import { Menu } from "./core/menu";
 import { BookInteractor } from "./src/book-management/books.interactor";
+import { UserInteractor } from "./src/user-management/user.interactor";
 
 const menu = new Menu(`\nMain Menu `, [
   { key: "1", label: "Book Management" },
@@ -13,6 +14,7 @@ const menu = new Menu(`\nMain Menu `, [
 
 export class LibraryInteractor implements IInteractor {
   private readonly bookInteractor = new BookInteractor();
+  private readonly userInteractor = new UserInteractor();
   async showMenu(): Promise<void> {
     let loop = true;
     while (loop) {
@@ -23,6 +25,7 @@ export class LibraryInteractor implements IInteractor {
             await this.bookInteractor.showMenu();
             break;
           case "2":
+            await this.userInteractor.showMenu();
             break;
           case "5":
             loop = false;
@@ -37,3 +40,5 @@ export class LibraryInteractor implements IInteractor {
     process.exit(0);
   }
 }
+// const a = new LibraryInteractor();
+// a.showMenu();

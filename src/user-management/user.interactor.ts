@@ -2,7 +2,7 @@ import { readChar, readLine } from "../../core/input.utils";
 import { IInteractor } from "../../core/interactor";
 import { IUserBase, IUser } from "./models/user.model";
 import { UserRepository } from "./user.repository";
-import { Database } from "../../db/db";
+import { Database } from "../../db/userDb";
 import { z } from "zod";
 import chalk from "chalk";
 
@@ -67,7 +67,7 @@ export class UserInteractor implements IInteractor {
         this.repo.delete(+UId);
         break;
       case "6":
-        process.exit(0);
+        return;
     }
     await this.showMenu();
   }
@@ -130,5 +130,5 @@ async function updateUser(repo: UserRepository, UIdToUpdate: number) {
   repo.update(UIdToUpdate, updatedData);
 }
 
-const a: UserInteractor = new UserInteractor();
-a.showMenu();
+// const a: UserInteractor = new UserInteractor();
+// a.showMenu();
