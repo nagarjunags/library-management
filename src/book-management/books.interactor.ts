@@ -6,6 +6,7 @@ import { Menu } from "../../core/menu";
 import { getEditableInput } from "../../core/print.utils";
 import { Database } from "../../db/db";
 import * as readline from "readline";
+import { join } from "path";
 const menu = new Menu("Book Management", [
   { key: "1", label: "Add Book" },
   { key: "2", label: "Edit Book" },
@@ -17,7 +18,7 @@ const menu = new Menu("Book Management", [
 
 export class BookInteractor implements IInteractor {
   private repo = new BookRepository(
-    new Database("../Library-Management/data/books.json")
+    new Database(join(__dirname, "../data/data.json"))
   );
 
   async showMenu(): Promise<void> {
@@ -50,15 +51,12 @@ export class BookInteractor implements IInteractor {
         }
       } else {
         console.log("\nInvalid input\n\n");
-
       }
     }
   }
 }
 
 async function getBookInput(): Promise<IBookBase> {
-
-
   const title = await readLine(`Please enter title:`);
   const author = await readLine(`Please enter author:`);
   const publisher = await readLine(`Please enter publisher:`);
@@ -86,7 +84,6 @@ async function addBook(repo: BookRepository) {
   console.log("Book added successfully\nBook Id:");
   console.table(createdBook);
 }
-
 
 async function updateBook(repo: BookRepository) {
   const id = +(await readLine("Please enter the ID of the book to update:"));
@@ -187,4 +184,3 @@ async function showPaginatedBooks(repo: BookRepository): Promise<void> {
   }
   process.stdin.resume();
 }
-

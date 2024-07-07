@@ -1,0 +1,20 @@
+1.Transaction
+    return book
+    issue book
+    due list 
+    today's due(horgade)
+    
+
+    transaction model:
+        TId
+        Book Id,Book Name
+        UId
+        Uname
+        Ph.No
+        Issued Date
+        Return Date
+        Isreturned?(var)
+        Fine = 0
+
+
+

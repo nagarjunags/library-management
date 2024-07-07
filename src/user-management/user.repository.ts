@@ -1,7 +1,7 @@
 import { IPageRequest, IPagedResponse } from "../../core/pagination.model";
 import { IRepository } from "../../core/repository";
 import { IUser, IUserBase } from "./models/user.model";
-import { Database } from "../../db/userDb";
+import { UDatabase } from "../../db/userDb";
 
 /**
  * Class representing a user repository.
@@ -12,7 +12,7 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
    * Creates an instance of UserRepository.
    * @param {Database} db - The database instance.
    */
-  constructor(private readonly db: Database) {}
+  constructor(private readonly db: UDatabase) {}
 
   /**
    * Retrieves the list of users from the database.

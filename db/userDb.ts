@@ -26,7 +26,7 @@ export const JsonAdapter: DatabaseStorageAdapter = {
   },
 };
 
-export class Database {
+export class UDatabase {
   private dataStore: Dataset = {};
 
   constructor(
@@ -91,4 +91,3 @@ export class Database {
     }
   }
 }
-

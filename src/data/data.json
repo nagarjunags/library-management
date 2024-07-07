@@ -1,1 +1,103 @@
-{"users":[{"name":"Nagarjuna","DOB":"2001-55-55","phoneNum":8618333210,"UId":1},{"name":"Nagarjuna","DOB":"5555-88-88","phoneNum":8787878799,"UId":2},{"name":"k","DOB":"5555-88-99","phoneNum":5656565656,"UId":3}]}
+{
+  "users": [
+    {
+      "name": "Nagarjuna",
+      "DOB": "2001-55-55",
+      "phoneNum": 8618333210,
+      "UId": 1
+    },
+    {
+      "name": "Nagarjuna",
+      "DOB": "5555-88-88",
+      "phoneNum": 8787878799,
+      "UId": 44
+    }
+  ],
+  "kjbkjb": ["kjnkn"],
+  "books": [
+    {
+      "title": "az",
+      "author": "a",
+      "publisher": "az",
+      "genre": ["az"],
+      "isbnNo": "1111111111111",
+      "numofPages": 54,
+      "totalNumberOfCopies": 67,
+      "id": 1,
+      "availableNumberOfCopies": null
+    },
+    {
+      "title": "fun",
+      "author": "rkrgl",
+      "publisher": "dkj vkj",
+      "genre": ["dkj", "vkdjf", ""],
+      "isbnNo": "23456",
+      "numofPages": 234,
+      "totalNumberOfCopies": 232,
+      "id": 2,
+      "availableNumberOfCopies": 0
+    }
+  ],
+  "transactions": [
+    {
+      "userId": 1,
+      "bookId": 1,
+      "returnPeriod": 10,
+      "transactionId": 1,
+      "issueddate": "2024-07-07T17:21:39.517Z",
+      "returnDate": "2024-07-17T17:21:39.517Z",
+      "isReturned": true,
+      "fine": 0
+    },
+    {
+      "userId": 1,
+      "bookId": 2,
+      "returnPeriod": 10,
+      "transactionId": 2,
+      "issueddate": "2024-07-07",
+      "returnDate": "2024-07-17",
+      "isReturned": true,
+      "fine": 0
+    },
+    {
+      "userId": 1,
+      "bookId": 5,
+      "returnPeriod": 12,
+      "transactionId": 3,
+      "issueddate": "2024-07-07",
+      "returnDate": "2024-07-19",
+      "isReturned": true,
+      "fine": 0
+    },
+    {
+      "userId": 44,
+      "bookId": 44,
+      "returnPeriod": 15,
+      "transactionId": 4,
+      "issueddate": "2024-07-07",
+      "returnDate": "2024-07-22",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 66,
+      "bookId": 66,
+      "returnPeriod": 66,
+      "transactionId": 5,
+      "issueddate": "2024-07-01",
+      "returnDate": "2024-07-05",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 55,
+      "bookId": 0,
+      "returnPeriod": 5,
+      "transactionId": 6,
+      "issueddate": "2024-07-07",
+      "returnDate": "2024-07-12",
+      "isReturned": false,
+      "fine": 0
+    }
+  ]
+}

@@ -2,9 +2,10 @@ import { readChar, readLine } from "../../core/input.utils";
 import { IInteractor } from "../../core/interactor";
 import { IUserBase, IUser } from "./models/user.model";
 import { UserRepository } from "./user.repository";
-import { Database } from "../../db/userDb";
+import { UDatabase } from "../../db/userDb";
 import { z } from "zod";
 import chalk from "chalk";
+import { join } from "path";
 
 const menu = `
     1. Add User
@@ -35,7 +36,9 @@ const userSchema = z.object({
  * @implements {IInteractor}
  */
 export class UserInteractor implements IInteractor {
-  private repo = new UserRepository(new Database("../data/data.json"));
+  private repo = new UserRepository(
+    new UDatabase(join(__dirname, "../data/data.json"))
+  );
 
   /**
    * Displays the menu and handles user input.
