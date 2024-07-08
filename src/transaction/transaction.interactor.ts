@@ -10,10 +10,8 @@ const menu = new Menu("Transaction Menu", [
   { key: "1", label: "Issue Book" },
   { key: "2", label: "Return Book" },
   { key: "3", label: "Find Issued Members by Book Id" },
-  { key: "4", label: "Books Borrowed by User" },
-  { key: "5", label: "Fine Calculator" },
-  { key: "6", label: "Today's due" },
-  { key: "7", label: "<Previous Menu>" },
+  { key: "4", label: "Today's due" },
+  { key: "5", label: "<Previous Menu>" },
 ]);
 
 export class TransactionInteractor implements IInteractor {
@@ -38,16 +36,9 @@ export class TransactionInteractor implements IInteractor {
             await getPendingMembersByBookId(this.repo);
             break;
           case "4":
-            // TODO: Books Borrowed by User
-            break;
-          case "5":
-            // TODO: Fine Calculator
-            break;
-          case "6":
-            // TODO: List All Transactions
             await this.repo.todaysDue();
             break;
-          case "7":
+          case "5":
             loop = false;
             break;
           default:
@@ -91,6 +82,3 @@ async function getPendingMembersByBookId(repo: TransactionRepository) {
   const uid = +(await readLine("Enter the book ID:"));
   const pendingMembers = repo.getPendingUserByBookId(uid);
 }
-
-const smenu = new TransactionInteractor();
-smenu.showMenu();

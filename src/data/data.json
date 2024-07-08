@@ -11,9 +11,68 @@
       "DOB": "5555-88-88",
       "phoneNum": 8787878799,
       "UId": 44
+    },
+    {
+      "name": "Alice",
+      "DOB": "1990-01-01",
+      "phoneNum": 1234567890,
+      "UId": 2
+    },
+    {
+      "name": "Bob",
+      "DOB": "1985-02-02",
+      "phoneNum": 2345678901,
+      "UId": 3
+    },
+    {
+      "name": "Charlie",
+      "DOB": "1975-03-03",
+      "phoneNum": 3456789012,
+      "UId": 4
+    },
+    {
+      "name": "David",
+      "DOB": "1995-04-04",
+      "phoneNum": 4567890123,
+      "UId": 5
+    },
+    {
+      "name": "Eva",
+      "DOB": "1980-05-05",
+      "phoneNum": 5678901234,
+      "UId": 6
+    },
+    {
+      "name": "Frank",
+      "DOB": "1992-06-06",
+      "phoneNum": 6789012345,
+      "UId": 7
+    },
+    {
+      "name": "Grace",
+      "DOB": "1988-07-07",
+      "phoneNum": 7890123456,
+      "UId": 8
+    },
+    {
+      "name": "Hannah",
+      "DOB": "1993-08-08",
+      "phoneNum": 8901234567,
+      "UId": 9
+    },
+    {
+      "name": "Ivan",
+      "DOB": "1983-09-09",
+      "phoneNum": 9012345678,
+      "UId": 10
+    },
+    {
+      "name": "Jack",
+      "DOB": "1978-10-10",
+      "phoneNum": 1234098765,
+      "UId": 11
     }
   ],
-  "kjbkjb": ["kjnkn"],
   "books": [
     {
       "title": "az",
@@ -24,7 +83,7 @@
       "numofPages": 54,
       "totalNumberOfCopies": 67,
       "id": 1,
-      "availableNumberOfCopies": null
+      "availableNumberOfCopies": 55
     },
     {
       "title": "fun",
@@ -35,7 +94,117 @@
       "numofPages": 234,
       "totalNumberOfCopies": 232,
       "id": 2,
-      "availableNumberOfCopies": 0
+      "availableNumberOfCopies": 10
+    },
+    {
+      "title": "The Great Gatsby",
+      "author": "F. Scott Fitzgerald",
+      "publisher": "Charles Scribner's Sons",
+      "genre": ["Novel", "Historical"],
+      "isbnNo": "9780743273565",
+      "numofPages": 180,
+      "totalNumberOfCopies": 50,
+      "id": 3,
+      "availableNumberOfCopies": 20
+    },
+    {
+      "title": "To Kill a Mockingbird",
+      "author": "Harper Lee",
+      "publisher": "J.B. Lippincott & Co.",
+      "genre": ["Novel", "Southern Gothic"],
+      "isbnNo": "9780061120084",
+      "numofPages": 281,
+      "totalNumberOfCopies": 40,
+      "id": 4,
+      "availableNumberOfCopies": 15
+    },
+    {
+      "title": "1984",
+      "author": "George Orwell",
+      "publisher": "Secker & Warburg",
+      "genre": ["Dystopian", "Political fiction"],
+      "isbnNo": "9780451524935",
+      "numofPages": 328,
+      "totalNumberOfCopies": 60,
+      "id": 5,
+      "availableNumberOfCopies": 30
+    },
+    {
+      "title": "Moby-Dick",
+      "author": "Herman Melville",
+      "publisher": "Harper & Brothers",
+      "genre": ["Adventure", "Epic"],
+      "isbnNo": "9780142437247",
+      "numofPages": 635,
+      "totalNumberOfCopies": 25,
+      "id": 6,
+      "availableNumberOfCopies": 10
+    },
+    {
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "publisher": "T. Egerton",
+      "genre": ["Romantic fiction"],
+      "isbnNo": "9780141040349",
+      "numofPages": 279,
+      "totalNumberOfCopies": 70,
+      "id": 7,
+      "availableNumberOfCopies": 50
+    },
+    {
+      "title": "War and Peace",
+      "author": "Leo Tolstoy",
+      "publisher": "The Russian Messenger",
+      "genre": ["Historical fiction"],
+      "isbnNo": "9780199232765",
+      "numofPages": 1225,
+      "totalNumberOfCopies": 15,
+      "id": 8,
+      "availableNumberOfCopies": 5
+    },
+    {
+      "title": "The Catcher in the Rye",
+      "author": "J.D. Salinger",
+      "publisher": "Little, Brown and Company",
+      "genre": ["Novel"],
+      "isbnNo": "9780316769488",
+      "numofPages": 214,
+      "totalNumberOfCopies": 80,
+      "id": 9,
+      "availableNumberOfCopies": 60
+    },
+    {
+      "title": "The Hobbit",
+      "author": "J.R.R. Tolkien",
+      "publisher": "George Allen & Unwin",
+      "genre": ["Fantasy"],
+      "isbnNo": "9780547928227",
+      "numofPages": 310,
+      "totalNumberOfCopies": 100,
+      "id": 10,
+      "availableNumberOfCopies": 90
+    },
+    {
+      "title": "Jane Eyre",
+      "author": "Charlotte Brontë",
+      "publisher": "Smith, Elder & Co.",
+      "genre": ["Novel", "Romance"],
+      "isbnNo": "9780141441146",
+      "numofPages": 507,
+      "totalNumberOfCopies": 35,
+      "id": 11,
+      "availableNumberOfCopies": 25
+    },
+    {
+      "title": "The Lord of the Rings",
+      "author": "J.R.R. Tolkien",
+      "publisher": "George Allen & Unwin",
+      "genre": ["Fantasy"],
+      "isbnNo": "9780544003415",
+      "numofPages": 1178,
+      "totalNumberOfCopies": 45,
+      "id": 12,
+      "availableNumberOfCopies": 30
     }
   ],
   "transactions": [
@@ -44,9 +213,9 @@
       "bookId": 1,
       "returnPeriod": 10,
       "transactionId": 1,
-      "issueddate": "2024-07-07T17:21:39.517Z",
-      "returnDate": "2024-07-17T17:21:39.517Z",
-      "isReturned": true,
+      "issueddate": "2024-07-07",
+      "returnDate": "2024-07-17",
+      "isReturned": false,
       "fine": 0
     },
     {
@@ -56,7 +225,7 @@
       "transactionId": 2,
       "issueddate": "2024-07-07",
       "returnDate": "2024-07-17",
-      "isReturned": true,
+      "isReturned": false,
       "fine": 0
     },
     {
@@ -66,7 +235,7 @@
       "transactionId": 3,
       "issueddate": "2024-07-07",
       "returnDate": "2024-07-19",
-      "isReturned": true,
+      "isReturned": false,
       "fine": 0
     },
     {
@@ -96,6 +265,106 @@
       "transactionId": 6,
       "issueddate": "2024-07-07",
       "returnDate": "2024-07-12",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 2,
+      "bookId": 3,
+      "returnPeriod": 14,
+      "transactionId": 7,
+      "issueddate": "2024-06-20",
+      "returnDate": "2024-07-04",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 3,
+      "bookId": 4,
+      "returnPeriod": 14,
+      "transactionId": 8,
+      "issueddate": "2024-06-25",
+      "returnDate": "2024-07-09",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 4,
+      "bookId": 6,
+      "returnPeriod": 14,
+      "transactionId": 9,
+      "issueddate": "2024-06-15",
+      "returnDate": "2024-06-29",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 5,
+      "bookId": 7,
+      "returnPeriod": 14,
+      "transactionId": 10,
+      "issueddate": "2024-07-01",
+      "returnDate": "2024-07-15",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 6,
+      "bookId": 8,
+      "returnPeriod": 14,
+      "transactionId": 11,
+      "issueddate": "2024-06-30",
+      "returnDate": "2024-07-14",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 7,
+      "bookId": 9,
+      "returnPeriod": 14,
+      "transactionId": 12,
+      "issueddate": "2024-07-01",
+      "returnDate": "2024-07-15",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 8,
+      "bookId": 10,
+      "returnPeriod": 14,
+      "transactionId": 13,
+      "issueddate": "2024-06-15",
+      "returnDate": "2024-06-29",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 9,
+      "bookId": 11,
+      "returnPeriod": 14,
+      "transactionId": 14,
+      "issueddate": "2024-06-10",
+      "returnDate": "2024-06-24",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 10,
+      "bookId": 12,
+      "returnPeriod": 14,
+      "transactionId": 15,
+      "issueddate": "2024-06-05",
+      "returnDate": "2024-06-19",
+      "isReturned": false,
+      "fine": 0
+    },
+    {
+      "userId": 11,
+      "bookId": 3,
+      "returnPeriod": 14,
+      "transactionId": 16,
+      "issueddate": "2024-07-01",
+      "returnDate": "2024-07-15",
       "isReturned": false,
       "fine": 0
     }

@@ -61,6 +61,7 @@ export class TransactionRepository {
       fine: 0,
     };
 
+    book.availableNumberOfCopies -= 1;
     this.transactions.push(transaction);
     await this.db.save();
     return transaction;
@@ -75,7 +76,6 @@ export class TransactionRepository {
   async updateReturnStatus(userId: number): Promise<void> {
     const pendingTransactions = this.getPendingUserById(userId);
     pendingTransactions.map((trans) => {
-      const issuedDate = new Date(trans.issueddate);
       const returnDate = new Date(trans.returnDate);
       const today = new Date();
 
@@ -84,7 +84,7 @@ export class TransactionRepository {
 
       // Calculate the difference in time
       const timeDifference = today.getTime() - returnDate.getTime();
-
+      // console.log(timeDifference);
       // Convert time difference from milliseconds to days
       const daysExceeded = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
       if (daysExceeded >= 0) {
@@ -177,6 +177,9 @@ export class TransactionRepository {
       return;
     }
     transaction.isReturned = true;
+    const returnedBookID = transaction.bookId;
+    const returnedBook = this.bookrepo.getById(returnedBookID);
+    returnedBook!.availableNumberOfCopies += 1;
     const currentDate = new Date();
     if (currentDate > new Date(transaction.returnDate)) {
       const lateDays = Math.ceil(
