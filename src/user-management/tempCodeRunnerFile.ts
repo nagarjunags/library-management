@@ -1,5 +1,3 @@
-async function updateUser(repo: UserRepository, UIdToUpdate: number) {
-//   const user: IUser = repo.getById(UIdToUpdate)!;
-//   const updatedData = await getUserInput(user);
-//   repo.update(UIdToUpdate, updatedData);
-// }
+rivate repo = new UserRepository(
+  // new UDatabase(join(__dirname, "../data/data.json"))
+  // )

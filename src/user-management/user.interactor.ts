@@ -26,9 +26,11 @@ const userSchema = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "DOB must be in YYYY-MM-DD format"),
   phoneNum: z
-    .number()
-    .int()
-    .min(1000000000, "Phone number must be at least 10 digits"),
+    .string()
+    .regex(
+      /^\d{10,}$/,
+      "Phone number must be at least 10 digits and contain only numbers"
+    ),
 });
 
 /**
@@ -36,10 +38,10 @@ const userSchema = z.object({
  * @implements {IInteractor}
  */
 export class UserInteractor implements IInteractor {
-  private repo = new UserRepository(
-    new UDatabase(join(__dirname, "../data/data.json"))
-  );
-
+  repo: UserRepository; // TODO remove the db implementation
+  constructor() {
+    this.repo = new UserRepository();
+  }
   /**
    * Displays the menu and handles user input.
    * @returns {Promise<void>}
@@ -51,7 +53,6 @@ export class UserInteractor implements IInteractor {
         await addUser(this.repo);
         break;
       case "2":
-        console.log("Update");
         const UIdToUpdate = +(await readLine(
           "Enter the User Id to update user details."
         ));
@@ -59,15 +60,15 @@ export class UserInteractor implements IInteractor {
         break;
       case "3":
         const UIdToSearch = +(await readLine("Enter User Id to search"));
-        const user = this.repo.getById(UIdToSearch);
+        const user = await this.repo.getById(UIdToSearch);
         console.table(user);
         break;
       case "4":
         this.repo.lists();
         break;
       case "5":
-        const UId = await readLine("Enter User Id to delete");
-        this.repo.delete(+UId);
+        // const UId = await readLine("Enter User Id to delete");
+        // this.repo.delete(+UId);
         break;
       case "6":
         return;
@@ -78,13 +79,14 @@ export class UserInteractor implements IInteractor {
 
 /**
  * Prompts the user for input and validates it.
- * @param {IUser} [previous={ name: "", DOB: "", phoneNum: +"", UId: -1 }] - The previous user data.
+ * @param {IUser} [previous={ name: "", DOB: "", phoneNum: "", UId: -1 }] - The previous user data.
  * @returns {Promise<IUserBase>} The validated user input.
  */
 async function getUserInput(
-  previous: IUser = { name: "", DOB: "", phoneNum: +"", UId: -1 }
+  previous: IUser = { name: "", DOB: "", phoneNum: "", UId: -1 }
 ): Promise<IUserBase> {
-  const name = await readLine(`Please enter the Name (${previous?.name}):`);
+  // console.log(previous);
+  const name = await readLine(`Please enter the Name (${previous.name}):`);
   const DOB = await readLine(
     `Please enter the Date Of Birth (${previous?.DOB}):`
   );
@@ -95,11 +97,11 @@ async function getUserInput(
   const parsed = userSchema.safeParse({
     name: name,
     DOB: DOB,
-    phoneNum: +phoneNum,
+    phoneNum: phoneNum,
   });
 
   if (previous.UId !== -1) {
-    return { name: name, DOB: DOB, phoneNum: +phoneNum };
+    return { name: name, DOB: DOB, phoneNum: phoneNum };
   }
 
   if (!parsed.success) {
@@ -119,7 +121,8 @@ async function getUserInput(
  */
 async function addUser(repo: UserRepository) {
   const user: IUserBase = await getUserInput();
-  repo.create(user);
+  const createdUser = await repo.create(user);
+  console.log("User Created:", createdUser);
 }
 
 /**
@@ -128,8 +131,15 @@ async function addUser(repo: UserRepository) {
  * @param {number} UIdToUpdate - The ID of the user to update.
  */
 async function updateUser(repo: UserRepository, UIdToUpdate: number) {
-  const user: IUser = repo.getById(UIdToUpdate)!;
+  const user = ((await repo.getById(UIdToUpdate)!) as unknown as IUser[])[0];
+  if (user === undefined) {
+    console.log(`User with ${UIdToUpdate} does not exist.`);
+    return;
+  }
+
   const updatedData = await getUserInput(user);
+  // console.table(updatedData);
+
   repo.update(UIdToUpdate, updatedData);
 }
 

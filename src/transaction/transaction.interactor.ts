@@ -15,9 +15,7 @@ const menu = new Menu("Transaction Menu", [
 ]);
 
 export class TransactionInteractor implements IInteractor {
-  private repo = new TransactionRepository(
-    new Database(join(__dirname, "../data/data.json"))
-  );
+  private repo = new TransactionRepository();
 
   async showMenu(): Promise<void> {
     let loop = true;
@@ -33,10 +31,10 @@ export class TransactionInteractor implements IInteractor {
             break;
           case "3":
             // TODO: Find Issued Members by Book Id
-            await getPendingMembersByBookId(this.repo);
+            // await getPendingMembersByBookId(this.repo);
             break;
           case "4":
-            await this.repo.todaysDue();
+            // await this.repo.todaysDue();
             break;
           case "5":
             loop = false;
@@ -56,21 +54,29 @@ async function getTransactionInput(): Promise<ITransactionBase> {
   const userId = await readLine(`Please enter User Id:`);
   const bookId = await readLine(`Please enter Book Id:`);
   const returnPeriod = +(await readLine(`Please enter Return Period in days:`));
+  const returnDate: Date = addDaysToDate(returnPeriod);
+
+  function addDaysToDate(daysToAdd: number, baseDate: Date = new Date()): Date {
+    const resultDate = new Date(baseDate);
+    resultDate.setDate(resultDate.getDate() + daysToAdd);
+    return resultDate;
+  }
 
   return {
     userId: +userId,
     bookId: +bookId,
-    returnPeriod: returnPeriod,
+    returnDate: returnDate.toString(),
   };
 }
 
 async function addTransaction(repo: TransactionRepository) {
   const transaction: ITransactionBase = await getTransactionInput();
+  // console.log(transaction);
   const createdTransaction = await repo.create(transaction);
-  if (createdTransaction !== null) {
-    console.log("Transaction logged successfully\n");
-    console.table(createdTransaction);
-  }
+  //   if (createdTransaction !== null) {
+  //     console.log("Transaction logged successfully\n");
+  //     console.table(createdTransaction);
+  //   }
 }
 
 async function returnBook(repo: TransactionRepository) {
@@ -78,7 +84,10 @@ async function returnBook(repo: TransactionRepository) {
   await repo.updateReturnStatus(userId);
 }
 
-async function getPendingMembersByBookId(repo: TransactionRepository) {
-  const uid = +(await readLine("Enter the book ID:"));
-  const pendingMembers = repo.getPendingUserByBookId(uid);
-}
+// async function getPendingMembersByBookId(repo: TransactionRepository) {
+//   const uid = +(await readLine("Enter the book ID:"));
+//   const pendingMembers = repo.getPendingUserByBookId(uid);
+// }
+
+const a = new TransactionInteractor();
+a.showMenu();

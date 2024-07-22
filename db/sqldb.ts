@@ -1,30 +1,47 @@
-import mysql, { QueryResult } from "mysql2/promise";
-interface DBConfig {
+import mysql from "mysql2/promise";
+import { SqlClause } from "../src/libs/mysql-query-generator";
+export interface DBConfig {
   dbURL: string;
 }
 
-export class MYSQLAdapter {
-  private pool: mysql.Pool | null = null;
-  private connection: mysql.PoolConnection | null = null;
-  constructor(private readonly config: DBConfig) {}
-  async load() {
-    this.pool = await mysql.createPool(this.config.dbURL);
-    this.connection = await this.pool.getConnection();
+interface Adapter {
+  shutDown: () => Promise<void>;
+  runQuery: <T>(sql: string, values: any[]) => Promise<T | undefined>;
+}
+
+export class MySQLAdapter implements Adapter {
+  private pool: mysql.Pool;
+
+  constructor(private readonly config: DBConfig) {
+    this.pool = mysql.createPool(this.config.dbURL);
   }
 
   async shutDown() {
-    this.connection?.release();
-    this.pool?.end();
-    this.pool = null;
-    this.connection = null;
+    return this.pool.end();
   }
 
-  async runQuery(sql: string): Promise<mysql.QueryResult> {
-    if (this.connection) {
-      const [result] = await this.connection?.query(sql);
-      return result;
-    } else {
-      throw new Error("Database connection is not available.....");
+  async runQuery<T>(sql: string | SqlClause): Promise<T | undefined> {
+    let connection: mysql.PoolConnection | null = null;
+    let result;
+    try {
+      connection = await this.pool.getConnection();
+      if (typeof sql === "string") {
+        console.log("baaaa");
+
+        [result] = await connection.query(sql);
+      } else {
+        [result] = await connection.query(sql.query, sql.values);
+      }
+
+      return result as T;
+    } catch (err) {
+      if (err instanceof Error) {
+        throw new Error(err.message);
+      }
+    } finally {
+      if (connection) {
+        connection.release();
+      }
     }
   }
 }

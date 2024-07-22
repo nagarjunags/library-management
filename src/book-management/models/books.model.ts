@@ -3,7 +3,7 @@ export interface IBookBase {
   title: string;
   author: string;
   publisher: string;
-  genre: string[];
+  genre: string;
   isbnNo: string;
   numofPages: number;
   totalNumberOfCopies: number;

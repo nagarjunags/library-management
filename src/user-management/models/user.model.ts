@@ -2,7 +2,9 @@ export interface IUserBase {
   // immutable data which has to kept safe
   name: string;
   DOB: string;
-  phoneNum: number;
+  // age: number;
+  phoneNum: string;
+  // address: string;
 }
 
 export interface IUser extends IUserBase {
@@ -10,3 +12,4 @@ export interface IUser extends IUserBase {
   //   numOfBooksIssued: number;
   //   booksIssued: String[];
 }
+// console.log((keyof Iuser))

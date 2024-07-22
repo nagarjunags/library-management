@@ -16,5 +16,8 @@
         Isreturned?(var)
         Fine = 0
 
+========================================
+Add book:
+    insert a book and return the book:
 
 

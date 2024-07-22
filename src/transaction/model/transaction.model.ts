@@ -4,13 +4,12 @@ export interface ITransactionBase {
 
   bookId: number;
   userId: number;
-  returnPeriod: number;
+  returnDate: string;
 }
 
 export interface ITransaction extends ITransactionBase {
   transactionId: number;
   issueddate: string;
-  returnDate: string;
   isReturned: boolean;
   fine: number;
 }

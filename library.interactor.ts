@@ -4,6 +4,8 @@ import { Menu } from "./core/menu";
 import { BookInteractor } from "./src/book-management/books.interactor";
 import { UserInteractor } from "./src/user-management/user.interactor";
 import { TransactionInteractor } from "./src/transaction/transaction.interactor";
+import mysql from "mysql2/promise";
+import { AppEnv } from "./read-env";
 
 const menu = new Menu(`\nMain Menu `, [
   { key: "1", label: "Book Management" },
@@ -14,9 +16,14 @@ const menu = new Menu(`\nMain Menu `, [
 ]);
 
 export class LibraryInteractor implements IInteractor {
+  pool: mysql.Pool | null;
+  constructor() {
+    this.pool = mysql.createPool(AppEnv.DATABASE_URL);
+  }
   private readonly bookInteractor = new BookInteractor();
   private readonly userInteractor = new UserInteractor();
   private readonly transactionInteractor = new TransactionInteractor();
+  // private readonly transactionInteractor = new TransactionInteractor();
   async showMenu(): Promise<void> {
     let loop = true;
     while (loop) {

@@ -17,9 +17,7 @@ const menu = new Menu("Book Management", [
 ]);
 
 export class BookInteractor implements IInteractor {
-  private repo = new BookRepository(
-    new Database(join(__dirname, "../data/data.json"))
-  );
+  private repo = new BookRepository();
 
   async showMenu(): Promise<void> {
     let loop = true;
@@ -37,12 +35,14 @@ export class BookInteractor implements IInteractor {
             await deleteBook(this.repo);
             break;
           case "4":
-            console.table(this.repo.list({ limit: 1000, offset: 0 }).items);
+            await searchBook(this.repo);
+            // console.table(this.repo.list({ limit: 1000, offset: 0 }).items);
             break;
           case "5":
-            await showPaginatedBooks(this.repo);
+            // await showPaginatedBooks(this.repo);
             break;
           case "6":
+            await closeConnection(this.repo);
             loop = false;
             break;
           default:
@@ -71,7 +71,7 @@ async function getBookInput(): Promise<IBookBase> {
     title: title,
     author: author,
     publisher: publisher,
-    genre: [genre],
+    genre: genre,
     isbnNo: isbnNo,
     numofPages: numofPages,
     totalNumberOfCopies: totalNumberOfCopies,
@@ -87,7 +87,8 @@ async function addBook(repo: BookRepository) {
 
 async function updateBook(repo: BookRepository) {
   const id = +(await readLine("Please enter the ID of the book to update:"));
-  const book = repo.getById(id)!;
+  const book = await repo.getById(id)!;
+  // console.log(book);
   if (!book) {
     console.log(`Book with ID ${id} not found.`);
     return;
@@ -98,9 +99,7 @@ async function updateBook(repo: BookRepository) {
     "Please updated publisher: ",
     book.publisher
   );
-  book.genre = (
-    await getEditableInput("Please updated genre: ", book.genre.join(" "))
-  ).split(" ");
+  book.genre = await getEditableInput("Please updated genre: ", book.genre);
   book.isbnNo = await getEditableInput("Please updated ISBN.NO: ", book.isbnNo);
   book.numofPages = +(await getEditableInput(
     "Please updated number of pages: ",
@@ -111,8 +110,8 @@ async function updateBook(repo: BookRepository) {
     book.totalNumberOfCopies
   ));
   repo.update(id, book);
-  console.log("Updated Successfully");
-  console.table(book);
+  //   console.log("Updated Successfully");
+  //   console.table(book);
 }
 
 async function deleteBook(repo: BookRepository) {
@@ -122,65 +121,77 @@ async function deleteBook(repo: BookRepository) {
   console.table(deletedBook);
 }
 
-async function showPaginatedBooks(repo: BookRepository): Promise<void> {
-  let offset = 0;
-  const limit = 10; // Number of items per page
-
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-    terminal: true,
-  });
-
-  readline.emitKeypressEvents(process.stdin);
-  if (process.stdin.isTTY) {
-    process.stdin.setRawMode(true);
-  }
-
-  const handleKeyPress = (
-    chunk: Buffer,
-    key: { name: string; sequence: string }
-  ) => {
-    if (key.name === "q") {
-      rl.close();
-      return; // Exit the function to return to the books menu
-    }
-    if (
-      key.name === "right" &&
-      repo.list({ limit, offset }).pagination.hasNext
-    ) {
-      offset += limit;
-    } else if (
-      key.name === "left" &&
-      repo.list({ limit, offset }).pagination.hasPrevious
-    ) {
-      offset -= limit;
-    } else if (key.name === "q") {
-      rl.close();
-      return; // Exit the function to return to the books menu
-    }
-    showPage();
-  };
-
-  const showPage = () => {
-    const response = repo.list({ limit, offset });
-    console.clear();
-    console.table(response.items);
-    console.log(
-      "Press '←' for next page, '→' for previous page, or 'q' to quit."
-    );
-  };
-
-  process.stdin.on("keypress", handleKeyPress);
-  showPage();
-
-  await new Promise<void>((resolve) => {
-    rl.on("close", resolve);
-  });
-
-  process.stdin.removeListener("keypress", handleKeyPress);
-  if (process.stdin.isTTY) {
-    process.stdin.setRawMode(false);
-  }
-  process.stdin.resume();
+async function searchBook(repo: BookRepository) {
+  const Searchkey = await readLine("Enter the search key:");
+  repo.search(Searchkey);
 }
+
+async function closeConnection(repo: BookRepository) {
+  repo.close();
+}
+
+// async function showPaginatedBooks(repo: BookRepository): Promise<void> {
+//   let offset = 0;
+//   const limit = 10; // Number of items per page
+
+//   const rl = readline.createInterface({
+//     input: process.stdin,
+//     output: process.stdout,
+//     terminal: true,
+//   });
+
+//   readline.emitKeypressEvents(process.stdin);
+//   if (process.stdin.isTTY) {
+//     process.stdin.setRawMode(true);
+//   }
+
+//   const handleKeyPress = (
+//     chunk: Buffer,
+//     key: { name: string; sequence: string }
+//   ) => {
+//     if (key.name === "q") {
+//       rl.close();
+//       return; // Exit the function to return to the books menu
+//     }
+//     if (
+//       key.name === "right" &&
+//       repo.list({ limit, offset }).pagination.hasNext
+//     ) {
+//       offset += limit;
+//     } else if (
+//       key.name === "left" &&
+//       repo.list({ limit, offset }).pagination.hasPrevious
+//     ) {
+//       offset -= limit;
+//     } else if (key.name === "q") {
+//       rl.close();
+//       return; // Exit the function to return to the books menu
+//     }
+//     showPage();
+//   };
+
+//   const showPage = () => {
+//     const response = repo.list({ limit, offset });
+//     console.clear();
+//     console.table(response.items);
+//     console.log(
+//       "Press '←' for next page, '→' for previous page, or 'q' to quit."
+//     );
+//   };
+
+//   process.stdin.on("keypress", handleKeyPress);
+//   showPage();
+
+//   await new Promise<void>((resolve) => {
+//     rl.on("close", resolve);
+//   });
+
+//   process.stdin.removeListener("keypress", handleKeyPress);
+//   if (process.stdin.isTTY) {
+//     process.stdin.setRawMode(false);
+//   }
+//   process.stdin.resume();
+// }
+
+const a = new BookInteractor();
+a.showMenu();
