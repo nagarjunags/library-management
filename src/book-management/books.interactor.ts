@@ -4,9 +4,7 @@ import { IBookBase, IBook } from "./models/books.model";
 import { BookRepository } from "./books.repository";
 import { Menu } from "../../core/menu";
 import { getEditableInput } from "../../core/print.utils";
-import { Database } from "../../db/db";
-import * as readline from "readline";
-import { join } from "path";
+
 const menu = new Menu("Book Management", [
   { key: "1", label: "Add Book" },
   { key: "2", label: "Edit Book" },
@@ -17,7 +15,7 @@ const menu = new Menu("Book Management", [
 ]);
 
 export class BookInteractor implements IInteractor {
-  private repo = new BookRepository();
+  repo = new BookRepository();
 
   async showMenu(): Promise<void> {
     let loop = true;
@@ -27,22 +25,41 @@ export class BookInteractor implements IInteractor {
         switch (op?.key.toLowerCase()) {
           case "1":
             await addBook(this.repo);
+            this.repo.list;
             break;
           case "2":
             await updateBook(this.repo);
             break;
           case "3":
-            await deleteBook(this.repo);
+            const id = await readLine("id to delete:");
+            let deletedBook = await this.repo.getById(+id);
+            console.log("Confirm the book to delete:");
+            console.table(deletedBook);
+            const choice = await readChar(
+              "y to delete or any button to cancel"
+            );
+            if (choice === "y") {
+              deletedBook = await this.repo.delete(+id);
+              console.log("Deleted Book:");
+              console.table(deletedBook);
+            }
+
             break;
           case "4":
-            await searchBook(this.repo);
+            const key = await readLine("Enter the search key:");
+            const result = await this.repo.search(key);
+            console.table(result);
+            // await searchBook(this.repo);
             // console.table(this.repo.list({ limit: 1000, offset: 0 }).items);
             break;
           case "5":
+            const iid = await readLine("enter id:");
+            const b = await this.repo.getById(+iid);
+            console.log(b);
             // await showPaginatedBooks(this.repo);
             break;
           case "6":
-            await closeConnection(this.repo);
+            // await closeConnection(this.repo);
             loop = false;
             break;
           default:
@@ -78,7 +95,7 @@ async function getBookInput(): Promise<IBookBase> {
   };
 }
 
-async function addBook(repo: BookRepository) {
+export async function addBook(repo: BookRepository) {
   const book: IBookBase = await getBookInput();
   const createdBook = await repo.create(book);
   console.log("Book added successfully\nBook Id:");
@@ -87,7 +104,7 @@ async function addBook(repo: BookRepository) {
 
 async function updateBook(repo: BookRepository) {
   const id = +(await readLine("Please enter the ID of the book to update:"));
-  const book = await repo.getById(id)!;
+  let book = await repo.getById(id)!;
   // console.log(book);
   if (!book) {
     console.log(`Book with ID ${id} not found.`);
@@ -96,22 +113,22 @@ async function updateBook(repo: BookRepository) {
   book.title = await getEditableInput("Please updated title: ", book.title);
   book.author = await getEditableInput("Please updated author: ", book.author);
   book.publisher = await getEditableInput(
-    "Please updated publisher: ",
+    "Please update publisher: ",
     book.publisher
   );
   book.genre = await getEditableInput("Please updated genre: ", book.genre);
   book.isbnNo = await getEditableInput("Please updated ISBN.NO: ", book.isbnNo);
   book.numofPages = +(await getEditableInput(
-    "Please updated number of pages: ",
+    "Please update number of pages: ",
     book.numofPages
   ));
   book.totalNumberOfCopies = +(await getEditableInput(
-    "Please updated total number of copies: ",
+    "Please update total number of copies: ",
     book.totalNumberOfCopies
   ));
-  repo.update(id, book);
+  book = await repo.update(id, book);
   //   console.log("Updated Successfully");
-  //   console.table(book);
+  console.table(book);
 }
 
 async function deleteBook(repo: BookRepository) {
@@ -126,9 +143,9 @@ async function searchBook(repo: BookRepository) {
   repo.search(Searchkey);
 }
 
-async function closeConnection(repo: BookRepository) {
-  repo.close();
-}
+// async function closeConnection(repo: BookRepository) {
+//   repo.close();
+// }
 
 // async function showPaginatedBooks(repo: BookRepository): Promise<void> {
 //   let offset = 0;

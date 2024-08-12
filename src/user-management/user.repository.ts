@@ -7,6 +7,10 @@ import { MySqlPoolConnection } from "../../db/db-connection";
 import mysql from "mysql2/promise";
 import { AppEnv } from "../../read-env";
 import { MySqlQueryGenerator } from "../libs/mysql-query-generator";
+import { user } from "../drizzle/library.schema";
+import { getDb } from "../drizzle/migrate";
+import { eq, sql, like } from "drizzle-orm";
+
 /**
  * Class representing a user repository.
  * @implements {IRepository<IUserBase, IUser>}
@@ -25,49 +29,104 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
     this.mySqlPoolConnection.initialize();
     this.librarydb = new Librarydb();
   }
-  async update(id: number, updatedData: IUserBase): Promise<IUser | null> {
-    const whereClause: WhereExpression<IUser> = {
-      UId: { op: "EQUALS", value: id },
-    };
-    this.librarydb.update<IUserBase>("users", updatedData, whereClause);
-    // throw new Error("Method not implemented.");
-    return null;
-  }
-  delete(id: number): Promise<IUser | null> {
-    throw new Error("Method not implemented.");
-  }
   list(params: IPageRequest): IPagedResponse<IUser> {
     throw new Error("Method not implemented.");
   }
+  // async list(params: {
+  //   limit: number; // Optional
+  //   offset: number; // Optional
+  //   search?: string; // Optional
+  // }): Promise<IPagedResponse<IUser>> {
+  //   const { limit = 10, offset = 0, search } = params;
+  //   const db = await getDb();
+  //   try {
+  //     // Build the query using Drizzle ORM
+  //     let query = db.select().from(user);
 
-  // /**
-  //  * Retrieves the list of users from the database.
-  //  * @private
-  //  * @returns {IUser[]} The list of users.
-  //  */
-  // private get users(): IUser[] {
-  //   return this.db.table<IUser>("users");
+  //     if (search) {
+  //       query = query.where(
+  //         and(
+  //           like(user.name, `%${search}%`),
+  //           like(user.phoneNum, `%${search}%`)
+  //         )
+  //       );
+  //     }
+
+  //     // Fetch the total count of matching records
+  //     const totalCountResult = await db
+  //       .select({ count: sql`COUNT(*)` })
+  //       .from(user)
+  //       .execute();
+  //     const total = totalCountResult[0]?.count || 0;
+
+  //     // Fetch the paginated data
+  //     const users = await query.limit(limit).offset(offset).execute();
+
+  //     return {
+  //       items: users as IUser[],
+  //       pagination: {
+  //         offset,
+  //         limit,
+  //         total,
+  //         hasNext: offset + limit < total,
+  //         hasPrevious: offset > 0,
+  //       },
+  //     };
+  //   } catch (err) {
+  //     console.error("Error listing users:", err);
+  //     throw err;
+  //   }
   // }
+  async update(id: number, updatedData: IUserBase): Promise<IUser | null> {
+    // Update the user data where UId equals the provided id
+    const db = await getDb();
+    await db.update(user).set(updatedData).where(eq(user.UId, id));
+
+    // Fetch the updated user
+    const result = await db
+      .select()
+      .from(user)
+      .where(eq(user.UId, id))
+      .limit(1);
+    return null;
+    // Return the updated user if found, otherwise return null
+    // return result.length > 0 ? result[0] : null;
+  }
+  async delete(id: number): Promise<IUser | null> {
+    // Fetch the record before deletion to return it later
+    const db = await getDb();
+    const recordToDelete = await db
+      .select()
+      .from(user)
+      .where(eq(user.UId, id))
+      .limit(1)
+      .execute();
+
+    if (recordToDelete.length === 0) {
+      return null;
+    }
+
+    await db.delete(user).where(eq(user.UId, id)).execute();
+
+    // Return the previously fetched record
+    return recordToDelete[0] as IUser;
+  }
 
   /**
    * Creates a new user.
    * @param {IUserBase} data - The user data.
    * @returns {Promise<IUser>} The created user.
    */
-  async create(data: IUserBase): Promise<IUser> {
-    // const user: IUserBase = {
-    //   ...data,
-    //   // UId: 1, //this.users.length + 1,
-    // };
-    const a = this.librarydb.select<IUser>(
-      "users",
-      parseInt(data.phoneNum),
-      "phoneNum"
-    ) as unknown as IUser;
-    const user = this.librarydb.insert<IUserBase>("users", data);
-    // let a = generateInsertSql<IUser>("users", user); //TODO parse it to
-    console.log(a);
-    return a;
+  async create(data: IUserBase): Promise<IUser> | null {
+    // Insert the user data into the users table
+
+    const db = await getDb();
+    console.table(data);
+    const insertId = (await db.insert(user).values(data).$returningId())[0].UId;
+    // console.log(insertId);
+    //TODO: add getbyId and return the created user
+    const insertedUser = this.getById(insertId);
+    return insertedUser ?? null;
   }
 
   // /**
@@ -123,34 +182,31 @@ export class UserRepository implements IRepository<IUserBase, IUser> {
    * @returns {IUser | null} The user or null if not found.
    */
   async getById(id: number): Promise<IUser | null> {
-    //     const book = this.books.find((b) => b.id === id);
-    const whereExpression: WhereExpression<IUser> = {
-      UId: { op: "EQUALS", value: id },
-    };
-    const getByIdClause = MySqlQueryGenerator.generateSelectSql<IUser>(
-      "users",
-      [], //TODO CHECK IT
-      whereExpression,
-      0,
-      1
-    );
-    console.log(getByIdClause);
-    const result = (
-      (await this.mySqlPoolConnection.query(
-        getByIdClause.query,
-        getByIdClause.values[0]
-      )) as Array<IUser>
-    )[0];
+    // Fetch the user by UId using Drizzle ORM
+    const db = await getDb();
+    const result = await db
+      .select()
+      .from(user)
+      .where(eq(user.UId, id))
+      .limit(1);
+    // return null;
+    // Return the user if found, otherwise return null
+    return result[0] ?? null;
+  }
 
-    return result as unknown as IUser;
+  async getByUsername(username: string) {
+    const db = await getDb();
+    const result = await db
+      .select()
+      .from(user)
+      .where(eq(user.name, username))
+      .limit(1);
+    return result[0] ?? null;
   }
 
   /**
    * Lists all users.
    */
-  lists() {
-    console.table();
-  }
 
   // /**
   //  * Lists users with pagination.

@@ -16,6 +16,8 @@ import { MySqlTransactionPoolConnection } from "../../db/db-connection";
 import { WhereExpression } from "../libs/types";
 import { MySqlQueryGenerator, SqlClause } from "../libs/mysql-query-generator";
 
+import { getDb } from "../drizzle/migrate";
+
 export class TransactionRepository {
   private mySqlTransactionPoolConnection: MySqlTransactionPoolConnection;
   pool: mysql.Pool | null;
@@ -38,14 +40,13 @@ export class TransactionRepository {
   // );
 
   async create(data: ITransactionBase): Promise<ITransaction | null> {
-    if ((await this.userRepo.getById(data.userId)) === undefined) {
+    if ((await this.userRepo.getById(data.userId)) === null) {
       console.log(errorTheme("No Users with the ID:", data.userId));
       return null;
     }
     // console.log(await this.userRepo.getById(data.userId));
 
     const book = await this.bookRepo.getById(data.bookId);
-    console.log(typeof book?.availableNumberOfCopies);
     // return null;
 
     if (book === undefined || book === null) {

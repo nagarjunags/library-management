@@ -1,2 +1,2 @@
-new LibraryInteractor();
-a.showMenu();
+
+// server.delete("/books/:id", deleteBookHandler);

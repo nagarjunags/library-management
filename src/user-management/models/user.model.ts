@@ -4,6 +4,7 @@ export interface IUserBase {
   DOB: string;
   // age: number;
   phoneNum: string;
+  password: string;
   // address: string;
 }
 

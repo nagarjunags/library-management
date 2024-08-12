@@ -180,8 +180,8 @@ const rows = [
 
 const exampleInsertClause = generateInsertSql("Users", rows);
 
-console.log("Generated INSERT clause:", exampleInsertClause.query);
-console.log("Values:", exampleInsertClause.values);
+// console.log("Generated INSERT clause:", exampleInsertClause.query);
+// console.log("Values:", exampleInsertClause.values);
 
 const generateUpdateSql = <Model>(
   tableName: string,
@@ -308,5 +308,5 @@ const exampleWhereClause = generateWhereClauseSql<Partial<IUserBase>>({
   ],
 });
 
-console.log("Generated WHERE clause:", exampleWhereClause.query);
-console.log("Values:", exampleWhereClause.values);
+// console.log("Generated WHERE clause:", exampleWhereClause.query);
+// console.log("Values:", exampleWhereClause.values);

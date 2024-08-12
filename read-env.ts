@@ -4,3 +4,4 @@ export interface AppEnv {
   DATABASE_URL: string;
 }
 export const AppEnv = process.env as unknown as AppEnv;
+ console.log()
