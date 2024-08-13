@@ -1,8 +1,8 @@
-import { Router } from "express";
+import { Router, Request, Response, NextFunction } from "express";
 import { UserRepository } from "../src/user-management/user.repository";
 import { IUserBase } from "../src/user-management/models/user.model";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const router = Router();
 const userRepo = new UserRepository();
@@ -15,7 +15,7 @@ const JWT_SECRET = "your_secret_key"; // Replace with a strong secret key
  * @desc Register a new user
  * @access Public
  */
-router.post("/register", async (req, res) => {
+router.post("/register", async (req: Request, res: Response) => {
   try {
     const userData: IUserBase = req.body;
 
@@ -38,7 +38,7 @@ router.post("/register", async (req, res) => {
  * @desc Login a user and return a JWT token
  * @access Public
  */
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
     const user = await userRepo.getByUsername(username);
@@ -66,7 +66,7 @@ router.post("/login", async (req, res) => {
 /**
  * Middleware to verify JWT token
  */
-const authenticateJWT = (req, res, next) => {
+const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
 
   if (authHeader) {
@@ -76,7 +76,7 @@ const authenticateJWT = (req, res, next) => {
       if (err) {
         return res.status(403).json({ message: "Invalid token" });
       }
-      req.user = user;
+      req.user = user as JwtPayload;
       next();
     });
   } else {
@@ -89,7 +89,7 @@ const authenticateJWT = (req, res, next) => {
  * @desc Update an existing user
  * @access Private (Only the user himself can update)
  */
-router.put("/:id", authenticateJWT, async (req, res) => {
+router.put("/:id", authenticateJWT, async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.id, 10);
     if (userId !== req.user.userId) {
@@ -119,7 +119,7 @@ router.put("/:id", authenticateJWT, async (req, res) => {
  * @desc Delete a user
  * @access Private (Only the user himself can delete)
  */
-router.delete("/:id", authenticateJWT, async (req, res) => {
+router.delete("/:id", authenticateJWT, async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.id, 10);
     if (userId !== req.user.userId) {
@@ -143,7 +143,7 @@ router.delete("/:id", authenticateJWT, async (req, res) => {
  * @desc Get a user by ID
  * @access Private (Only the user himself can view his details)
  */
-router.get("/:id", authenticateJWT, async (req, res) => {
+router.get("/:id", authenticateJWT, async (req: Request, res: Response) => {
   try {
     const userId = parseInt(req.params.id, 10);
     if (userId !== req.user.userId) {
@@ -167,7 +167,7 @@ router.get("/:id", authenticateJWT, async (req, res) => {
  * @desc List users with optional search and pagination
  * @access Public
  */
-router.get("/", async (req, res) => {
+router.get("/", async (req: Request, res: Response) => {
   try {
     const { limit, offset, search } = req.query;
     const pageRequest = {
